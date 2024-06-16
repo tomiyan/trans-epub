@@ -1,6 +1,6 @@
 [package]
 name = "trans-epub"
-version = "0.0.4"
+version = "0.0.5"
 edition = "2021"
 description = "Translate EPUB with CLI"
 repository = "https://github.com/tomiyan/trans-epub"
@@ -23,3 +23,21 @@ regex = "1.10.5"
 env_logger = "0.11.3"
 log = "0.4.21"
 futures = "0.3.30"
+
+[workspace.metadata.cross.target.aarch64-unknown-linux-gnu]
+pre-build = [
+    "dpkg --add-architecture $CROSS_DEB_ARCH",
+    "apt-get update && apt-get --assume-yes install libssl-dev:$CROSS_DEB_ARCH"
+]
+
+[workspace.metadata.cross.target.i686-unknown-linux-gnu]
+pre-build = [
+    "dpkg --add-architecture $CROSS_DEB_ARCH",
+    "apt-get update && apt-get --assume-yes install libssl-dev:$CROSS_DEB_ARCH"
+]
+
+[workspace.metadata.cross.target.x86_64-unknown-linux-gnu]
+pre-build = [
+    "dpkg --add-architecture $CROSS_DEB_ARCH",
+    "apt-get update && apt-get --assume-yes install libssl-dev:$CROSS_DEB_ARCH"
+]
