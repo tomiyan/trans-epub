@@ -56,12 +56,6 @@ jobs:
           target: ${{ matrix.job.target }}
           profile: minimal
           override: true
-      - name: Install macos Build Dependencies
-        if: ${{ matrix.job.os-name == 'macos' }}
-        run: brew install openssl@1.1
-      - name: Set OpenSSL path
-        if: ${{ matrix.job.os-name == 'macos' }}
-        run: echo 'export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"' >> $GITHUB_ENV
       - uses: Swatinem/rust-cache@v2
       - name: Cargo build
         uses: actions-rs/cargo@v1
