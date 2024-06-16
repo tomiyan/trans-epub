@@ -1,6 +1,6 @@
+mod client;
 mod epub;
 mod translate;
-mod client;
 
 use crate::epub::Epub;
 use crate::translate::open_ai::OpenAi;
@@ -55,7 +55,15 @@ async fn main() {
     debug!("start");
     let args = Args::parse();
     match args.subcommand {
-        SubCommands::OpenAi { api_key, model, language, lines, requests, input, output } => {
+        SubCommands::OpenAi {
+            api_key,
+            model,
+            language,
+            lines,
+            requests,
+            input,
+            output,
+        } => {
             let open_ai = OpenAi::new(api_key, model, language, lines, requests);
             let epub = Epub::new(input, output);
             epub.translate(open_ai).await;
