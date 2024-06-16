@@ -21,30 +21,35 @@ jobs:
             architecture: x86_64
             binary-postfix: ""
             use-cross: false
+            pkg-config-path: ""
           - os: macos-latest
             os-name: macos
             target: aarch64-apple-darwin
             architecture: arm64
             binary-postfix: ""
             use-cross: false
+            pkg-config-path: ""
           - os: ubuntu-latest
             os-name: linux
             target: x86_64-unknown-linux-gnu
             architecture: x86_64
             binary-postfix: ""
             use-cross: false
+            pkg-config-path: "/usr/lib/x86_64-linux-gnu/pkgconfig"
           - os: ubuntu-latest
             os-name: linux
             target: aarch64-unknown-linux-gnu
             architecture: arm64
             binary-postfix: ""
             use-cross: true
+            pkg-config-path: "/usr/lib/aarch64-linux-gnu/pkgconfig"
           - os: ubuntu-latest
             os-name: linux
             target: i686-unknown-linux-gnu
             architecture: i686
             binary-postfix: ""
             use-cross: true
+            pkg-config-path: "/usr/lib/i386-linux-gnu/pkgconfig"
 
     steps:
       - name: Checkout repository
@@ -59,6 +64,9 @@ jobs:
       - name: Install linux Build Dependencies
         if: ${{ matrix.job.os-name == 'linux' }}
         run: sudo apt-get update && sudo apt-get install -y pkg-config libssl-dev
+      - name: Set OpenSSL path
+        if: ${{ matrix.job.os-name == 'linux' }}
+        run: echo "${{ matrix.job.pkg-config-path }}" >> $GITHUB_ENV
       - name: Install macos Build Dependencies
         if: ${{ matrix.job.os-name == 'macos' }}
         run: brew install openssl@1.1
