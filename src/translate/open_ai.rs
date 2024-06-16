@@ -1,7 +1,7 @@
+use crate::client::open_ai::{request, Ratelimit, Stats};
 use futures::{stream, StreamExt};
 use log::{debug, error, trace};
 use serde::Deserialize;
-use crate::client::open_ai::{Ratelimit, request, Stats};
 
 #[derive(Deserialize)]
 struct ChoiceContent {
@@ -30,7 +30,13 @@ pub struct BulkTranslated {
 }
 
 impl OpenAi {
-    pub fn new(api_key: String, model: String, language: String, lines: usize, requests: usize) -> Self {
+    pub fn new(
+        api_key: String,
+        model: String,
+        language: String,
+        lines: usize,
+        requests: usize,
+    ) -> Self {
         Self {
             api_key,
             model,
@@ -45,7 +51,16 @@ impl OpenAi {
         if lines.is_empty() {
             return lines;
         }
-        translate_parallel(&self.language, &self.model, &self.api_key, lines, self.lines, self.requests, 0).await
+        translate_parallel(
+            &self.language,
+            &self.model,
+            &self.api_key,
+            lines,
+            self.lines,
+            self.requests,
+            0,
+        )
+        .await
     }
 }
 
@@ -65,7 +80,7 @@ async fn translate_parallel(
             let model = model.clone();
             let api_key = api_key.clone();
             number += 1;
-            let order_number = number.clone();
+            let order_number = number;
             async move {
                 translate_bulk(order_number, &language, &model, &api_key, chunked.to_vec()).await
             }
@@ -96,8 +111,21 @@ async fn translate_parallel(
                 trace!("{}", l);
             }
             error!("retry count: {}", retry_count);
-            error!("translated line length error {}/{}", translated_lines.len(), original_lines.len());
-            translated_lines = Box::pin(translate_parallel(language, model, api_key, original_lines, 1, requests, retry_count + 1)).await;
+            error!(
+                "translated line length error {}/{}",
+                translated_lines.len(),
+                original_lines.len()
+            );
+            translated_lines = Box::pin(translate_parallel(
+                language,
+                model,
+                api_key,
+                original_lines,
+                1,
+                requests,
+                retry_count + 1,
+            ))
+            .await;
         }
         translated.append(&mut translated_lines);
     }
@@ -107,7 +135,7 @@ async fn translate_parallel(
 async fn translate_bulk(
     number: i32,
     language: &String,
-    model: &String,
+    model: &str,
     api_key: &String,
     original_lines: Vec<String>,
 ) -> BulkTranslated {
@@ -128,15 +156,16 @@ async fn translate_bulk(
         If a paragraph of input is translated and a paragraph consists of multiple sentences, output an array consisting of multiple String.\
         Please remove `<paragraph>` and `</paragraph>` tags from the translation result.", language, &original_lines.len(), &original_lines.len());
 
-    let response = request(model, api_key, &prompt, &user_contents).await.expect("OpenAI API Request Error");
-    let choice_content =
-        serde_json::from_str::<ChoiceContent>(&response.choice.trim());
+    let response = request(model, api_key, &prompt, &user_contents)
+        .await
+        .expect("OpenAI API Request Error");
+    let choice_content = serde_json::from_str::<ChoiceContent>(response.choice.trim());
     if choice_content.is_err() {
         error!("JSON Parse error choice:{}", &response.choice.trim());
         return BulkTranslated {
             number,
             original_lines,
-            translated_lines : vec![],
+            translated_lines: vec![],
             stats: response.stats,
             ratelimit: response.ratelimit,
         };

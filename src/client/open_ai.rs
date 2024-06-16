@@ -62,11 +62,9 @@ pub struct Stats {
 impl Stats {
     pub fn log(&self) {
         info!(
-        "prompt tokens: {} completion tokens: {} total tokens: {}",
-        self.prompt_tokens,
-        self.completion_tokens,
-        self.total_tokens
-    );
+            "prompt tokens: {} completion tokens: {} total tokens: {}",
+            self.prompt_tokens, self.completion_tokens, self.total_tokens
+        );
     }
 }
 
@@ -93,11 +91,11 @@ impl Ratelimit {
         // TODO: add format ex 6m0s
         if let Some(milliseconds_str) = self.reset_tokens.strip_suffix("ms") {
             if let Ok(milliseconds) = milliseconds_str.parse::<u64>() {
-                return Duration::from_millis(milliseconds)
+                return Duration::from_millis(milliseconds);
             }
-        } else if let Some(seconds_str) = self.reset_tokens.strip_suffix("s") {
+        } else if let Some(seconds_str) = self.reset_tokens.strip_suffix('s') {
             if let Ok(seconds) = seconds_str.parse::<f64>() {
-                return Duration::from_secs_f64(seconds)
+                return Duration::from_secs_f64(seconds);
             }
         }
         Duration::from_secs(1)
@@ -113,7 +111,7 @@ pub struct Response {
 pub async fn request(
     model: &str,
     api_key: &String,
-    prompt: &String,
+    prompt: &str,
     user_contents: &Vec<String>,
 ) -> Result<Response, Error> {
     let client = Client::new();
@@ -131,24 +129,58 @@ pub async fn request(
     let response = response.unwrap();
     let headers = response.headers();
     let ratelimit = Ratelimit {
-        limit_requests: headers.get("x-ratelimit-limit-requests").unwrap().to_str().unwrap().to_string(),
-        limit_tokens: headers.get("x-ratelimit-limit-tokens").unwrap().to_str().unwrap().to_string(),
-        remaining_requests: headers.get("x-ratelimit-remaining-requests").unwrap().to_str().unwrap().to_string(),
-        remaining_tokens: headers.get("x-ratelimit-remaining-tokens").unwrap().to_str().unwrap().to_string(),
-        reset_requests: headers.get("x-ratelimit-reset-requests").unwrap().to_str().unwrap().to_string(),
-        reset_tokens: headers.get("x-ratelimit-reset-tokens").unwrap().to_str().unwrap().to_string(),
+        limit_requests: headers
+            .get("x-ratelimit-limit-requests")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string(),
+        limit_tokens: headers
+            .get("x-ratelimit-limit-tokens")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string(),
+        remaining_requests: headers
+            .get("x-ratelimit-remaining-requests")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string(),
+        remaining_tokens: headers
+            .get("x-ratelimit-remaining-tokens")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string(),
+        reset_requests: headers
+            .get("x-ratelimit-reset-requests")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string(),
+        reset_tokens: headers
+            .get("x-ratelimit-reset-tokens")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string(),
     };
 
     let status = response.status();
     let response_text = response.text().await.expect("API Response to Text error");
-    let response_body: ClientResponse = serde_json::from_str(&response_text).expect("API Response to JSON error");
+    let response_body: ClientResponse =
+        serde_json::from_str(&response_text).expect("API Response to JSON error");
 
     if response_body.choices.is_empty() {
         info!("response status: {}", status.to_string());
         trace!("response error: {}", response_text);
     }
 
-    debug!("sleep: {}sec", ratelimit.reset_tokens_duration().as_secs_f64());
+    debug!(
+        "sleep: {}sec",
+        ratelimit.reset_tokens_duration().as_secs_f64()
+    );
     tokio::time::sleep(ratelimit.reset_tokens_duration()).await;
 
     let choice = response_body
@@ -168,7 +200,11 @@ pub async fn request(
     })
 }
 
-fn to_request_body(model: &str, prompt: &String, user_contents_text_vec: &Vec<String>) -> ClientRequest {
+fn to_request_body(
+    model: &str,
+    prompt: &str,
+    user_contents_text_vec: &Vec<String>,
+) -> ClientRequest {
     let mut user_contents = vec![];
     for text in user_contents_text_vec {
         user_contents.push(Content {
@@ -187,7 +223,7 @@ fn to_request_body(model: &str, prompt: &String, user_contents_text_vec: &Vec<St
                 role: "system".to_string(),
                 content: vec![Content {
                     _type: "text".to_string(),
-                    text: prompt.clone(),
+                    text: prompt.to_owned(),
                 }],
             },
             MessageRequest {
