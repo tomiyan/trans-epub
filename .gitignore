@@ -1,0 +1,7 @@
+/target
+.cargo-ok
+.DS_Store
+*.epub
+.idea
+.env
+/tmp
