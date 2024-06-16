@@ -1526,7 +1526,7 @@ dependencies = [
 
 [[package]]
 name = "trans-epub"
-version = "0.0.7"
+version = "0.0.8"
 dependencies = [
  "clap",
  "env_logger",
