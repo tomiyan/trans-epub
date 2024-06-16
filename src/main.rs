@@ -7,6 +7,7 @@ use crate::translate::open_ai::OpenAi;
 use clap::{Parser, Subcommand};
 use log::debug;
 use std::path::PathBuf;
+use env_logger::Env;
 
 #[derive(Parser)]
 #[command(version, about)]
@@ -51,7 +52,7 @@ enum SubCommands {
 
 #[tokio::main]
 async fn main() {
-    env_logger::init();
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     debug!("start");
     let args = Args::parse();
     match args.subcommand {
