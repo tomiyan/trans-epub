@@ -5,9 +5,9 @@ mod translate;
 use crate::epub::Epub;
 use crate::translate::open_ai::OpenAi;
 use clap::{Parser, Subcommand};
+use env_logger::Env;
 use log::debug;
 use std::path::PathBuf;
-use env_logger::Env;
 
 #[derive(Parser)]
 #[command(version, about)]
