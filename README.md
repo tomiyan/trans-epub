@@ -30,8 +30,8 @@ This is a CLI tool to translate EPUB using OpenAI / Gemini API.
 Install
 
 ```bash
-curl -OL https://github.com/tomiyan/trans-epub/releases/download/0.0.9/trans-epub-0.0.9-macos-arm64.tar.gz
-tar xvzf trans-epub-0.0.9-macos-arm64.tar.gz
+curl -OL https://github.com/tomiyan/trans-epub/releases/download/0.0.10/trans-epub-0.0.10-macos-arm64.tar.gz
+tar xvzf trans-epub-0.0.10-macos-arm64.tar.gz
 ```
 
 Use Open AI help
