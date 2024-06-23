@@ -3,7 +3,7 @@ mod epub;
 mod translate;
 
 use crate::epub::Epub;
-use crate::translate::open_ai::OpenAi;
+use crate::translate::translator::{Context, Translator};
 use clap::{Parser, Subcommand};
 use env_logger::Env;
 use log::debug;
@@ -48,6 +48,36 @@ enum SubCommands {
         #[arg(long, default_value_t = 5)]
         requests: usize,
     },
+    /// Use Gemini API
+    Gemini {
+        /// input file path
+        #[arg(short, long)]
+        input: PathBuf,
+
+        /// output file path
+        #[arg(short, long)]
+        output: PathBuf,
+
+        /// translate language
+        #[arg(short, long)]
+        language: String,
+
+        /// Gemini model ex(gemini-1.5-flash)
+        #[arg(short, long, default_value_t = String::from("gemini-1.5-flash"))]
+        model: String,
+
+        /// Gemini API Key
+        #[arg(short, long, env, hide_env_values = true)]
+        api_key: String,
+
+        /// Number of lines of translation
+        #[arg(long, default_value_t = 100)]
+        lines: usize,
+
+        /// Number of concurrent requests
+        #[arg(long, default_value_t = 1)]
+        requests: usize,
+    },
 }
 
 #[tokio::main]
@@ -65,9 +95,34 @@ async fn main() {
             input,
             output,
         } => {
-            let open_ai = OpenAi::new(api_key, model, language, lines, requests);
+            let translator = Translator::OpenAi(Context {
+                model,
+                api_key,
+                language,
+                lines,
+                requests,
+            });
             let epub = Epub::new(input, output);
-            epub.translate(open_ai).await;
+            epub.translate(translator).await;
+        }
+        SubCommands::Gemini {
+            api_key,
+            model,
+            language,
+            lines,
+            requests,
+            input,
+            output,
+        } => {
+            let translator = Translator::Gemini(Context {
+                model,
+                api_key,
+                language,
+                lines,
+                requests,
+            });
+            let epub = Epub::new(input, output);
+            epub.translate(translator).await;
         }
     }
     debug!("end");

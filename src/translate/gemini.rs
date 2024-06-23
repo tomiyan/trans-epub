@@ -1,17 +1,12 @@
-use crate::client::open_ai::{request, Ratelimit, Stats};
+use crate::client::gemini::{request, Stats};
 use crate::translate::translator::Context;
 use futures::{stream, StreamExt};
 use log::{debug, error, trace};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-struct ChoiceContent {
-    results: Vec<ChoiceContentResult>,
-}
-
-#[derive(Deserialize)]
-struct ChoiceContentResult {
-    translated: Vec<String>,
+struct Translated {
+    text: Vec<String>,
 }
 
 pub struct BulkTranslated {
@@ -19,7 +14,6 @@ pub struct BulkTranslated {
     pub original_lines: Vec<String>,
     pub translated_lines: Vec<String>,
     pub stats: Stats,
-    pub ratelimit: Ratelimit,
 }
 
 pub async fn translate(context: &Context, lines: Vec<String>) -> Vec<String> {
@@ -74,7 +68,6 @@ async fn translate_parallel(
         let mut translated_lines = response.translated_lines;
         let original_lines = response.original_lines;
         response.stats.log();
-        response.ratelimit.log();
         if translated_lines.len() != original_lines.len() {
             if retry_count > 4 {
                 panic!("retry max error");
@@ -122,32 +115,29 @@ async fn translate_bulk(
     let prompt = format!("You are an excellent translator.\
         Translate it into {}. Please output the following JSON.\
         A string in `<paragraph>` tag to `</paragraph>` tag is one paragraph.\
-        The value of the `results` Key is an array type.\
-        Please output one line for each paragraph entered.\
-        There are {} paragraphs of input, please output {} lines.\
-        The value of `line` Key is a number type.\
-        Please output the number of the input paragraph.\
-        The value of `translated` Key is an array of String type.\
         If a paragraph of input is translated and a paragraph consists of multiple sentences, output an array consisting of multiple String.\
+        There are {} paragraphs of input, please output {} lines.\
+        Using this JSON schema:\
+        Paragraph = {{\"line\": number, \"text\": list[string]}}\
+        Return a `list[Paragraph]`\
         Please remove `<paragraph>` and `</paragraph>` tags from the translation result.", language, &original_lines.len(), &original_lines.len());
 
     let response = request(model, api_key, &prompt, &user_contents)
         .await
-        .expect("OpenAI API Request Error");
-    let choice_content = serde_json::from_str::<ChoiceContent>(response.choice.trim());
-    if choice_content.is_err() {
-        error!("JSON Parse error choice:{}", &response.choice.trim());
+        .expect("Gemini API Request Error");
+    let translated_vec = serde_json::from_str::<Vec<Translated>>(response.text.trim());
+    if translated_vec.is_err() {
+        error!("JSON Parse error choice:{}", &response.text.trim());
         return BulkTranslated {
             number,
             original_lines,
             translated_lines: vec![],
             stats: response.stats,
-            ratelimit: response.ratelimit,
         };
     }
     let mut translated_lines = vec![];
-    for result in choice_content.unwrap().results {
-        translated_lines.push(result.translated.join("\n"));
+    for result in translated_vec.unwrap() {
+        translated_lines.push(result.text.join("\n"));
     }
 
     BulkTranslated {
@@ -155,6 +145,5 @@ async fn translate_bulk(
         original_lines,
         translated_lines,
         stats: response.stats,
-        ratelimit: response.ratelimit,
     }
 }

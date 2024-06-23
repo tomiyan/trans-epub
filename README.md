@@ -5,7 +5,7 @@
 [![CI](https://github.com/tomiyan/trans-epub/workflows/CI/badge.svg)](https://github.com/tomiyan/trans-epub/actions)
 [![Rust GitHub Template](https://img.shields.io/badge/Rust%20GitHub-Template-blue)](https://rust-github.github.io/)
 
-This is a CLI tool to translate EPUB using OpenAI API.
+This is a CLI tool to translate EPUB using OpenAI / Gemini API.
 
 ## CAUTION
 
@@ -58,6 +58,34 @@ Use Open AI translate
 ```bash
 export API_KEY=sk-....
 ./trans-epub open-ai -i ./origin.epub -o ./translated.epub -l Japanese
+```
+
+Wait a few minutes.
+
+Use Gemini help
+
+```bash
+./trans-epub gemini --help
+Use Gemini API
+
+Usage: trans-epub gemini [OPTIONS] --input <INPUT> --output <OUTPUT> --language <LANGUAGE> --api-key <API_KEY>
+
+Options:
+  -i, --input <INPUT>        input file path
+  -o, --output <OUTPUT>      output file path
+  -l, --language <LANGUAGE>  translate language
+  -m, --model <MODEL>        Gemini model ex(gemini-1.5-flash) [default: gemini-1.5-flash]
+  -a, --api-key <API_KEY>    Gemini API Key [env: API_KEY]
+      --lines <LINES>        Number of lines of translation [default: 100]
+      --requests <REQUESTS>  Number of concurrent requests [default: 1]
+  -h, --help                 Print help
+```
+
+Use Gemini translate
+
+```bash
+export API_KEY=AI....
+./trans-epub gemini -i ./origin.epub -o ./translated.epub -l Japanese
 ```
 
 Wait a few minutes.
