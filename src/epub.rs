@@ -1,4 +1,4 @@
-use crate::translate::open_ai::OpenAi;
+use crate::translate::translator::Translator;
 use log::{debug, info};
 use quick_xml::events::{BytesText, Event};
 use quick_xml::{Reader, Writer};
@@ -22,7 +22,7 @@ impl Epub {
         }
     }
 
-    pub async fn translate(self, mut open_ai: OpenAi) {
+    pub async fn translate(self, translator: Translator) {
         debug!("translate start");
         let input_file = File::open(self.input_path).expect("input file open fail");
         let mut archive = ZipArchive::new(input_file).expect("input file unzip fail");
@@ -48,7 +48,7 @@ impl Epub {
             {
                 let content = strip_xml_content(&content);
                 let lines = translate_lines(&content).await;
-                let lines = open_ai.translate(lines).await;
+                let lines = translator.translate(lines).await;
                 let translated_content = translate_xml_content(lines, &content).await;
                 translated_contents.push((name, translated_content));
             } else {
