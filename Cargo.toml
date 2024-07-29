@@ -20,6 +20,6 @@ tokio = { version = "1", features = ["full"]}
 serde = { version = "1.0.203", features = ["derive"] }
 serde_json = "1.0.117"
 regex = "1.10.5"
-env_logger = "0.11.3"
+env_logger = "0.11.5"
 log = "0.4.21"
 futures = "0.3.30"
