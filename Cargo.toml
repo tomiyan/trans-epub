@@ -1,6 +1,6 @@
 [package]
 name = "trans-epub"
-version = "0.0.10"
+version = "0.0.11"
 edition = "2021"
 description = "Translate EPUB with CLI"
 repository = "https://github.com/tomiyan/trans-epub"
@@ -12,14 +12,14 @@ license = "MIT OR Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.5.11", features = ["derive", "env"]}
+clap = { version = "4.5.13", features = ["derive", "env"]}
 zip = "2.1.6"
-reqwest = { version = "0.12.4", default-features = false, features = ["json", "rustls-tls"] }
-quick-xml = "0.32.0"
+reqwest = { version = "0.12.5", default-features = false, features = ["json", "rustls-tls"] }
+quick-xml = "0.36.1"
 tokio = { version = "1", features = ["full"]}
-serde = { version = "1.0.203", features = ["derive"] }
+serde = { version = "1.0.204", features = ["derive"] }
 serde_json = "1.0.122"
-regex = "1.10.5"
+regex = "1.10.6"
 env_logger = "0.11.5"
-log = "0.4.21"
+log = "0.4.22"
 futures = "0.3.30"
