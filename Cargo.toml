@@ -17,7 +17,7 @@ zip = "2.1.6"
 reqwest = { version = "0.12.5", default-features = false, features = ["json", "rustls-tls"] }
 quick-xml = "0.36.1"
 tokio = { version = "1", features = ["full"]}
-serde = { version = "1.0.204", features = ["derive"] }
+serde = { version = "1.0.214", features = ["derive"] }
 serde_json = "1.0.122"
 regex = "1.10.6"
 env_logger = "0.11.5"
