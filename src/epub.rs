@@ -6,8 +6,8 @@ use regex::Regex;
 use std::fs::File;
 use std::io::{Cursor, Read, Write};
 use std::path::PathBuf;
-use zip::write::SimpleFileOptions;
 use zip::ZipArchive;
+use zip::write::SimpleFileOptions;
 
 pub struct Epub {
     input_path: PathBuf,

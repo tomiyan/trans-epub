@@ -30,8 +30,8 @@ This is a CLI tool to translate EPUB using OpenAI / Gemini API.
 Install
 
 ```bash
-curl -OL https://github.com/tomiyan/trans-epub/releases/download/0.0.10/trans-epub-0.0.10-macos-arm64.tar.gz
-tar xvzf trans-epub-0.0.10-macos-arm64.tar.gz
+curl -OL https://github.com/tomiyan/trans-epub/releases/download/0.0.13/trans-epub-0.0.13-macos-arm64.tar.gz
+tar xvzf trans-epub-0.0.13-macos-arm64.tar.gz
 ```
 
 Use Open AI help
@@ -46,7 +46,7 @@ Options:
   -i, --input <INPUT>        input file path
   -o, --output <OUTPUT>      output file path
   -l, --language <LANGUAGE>  translate language
-  -m, --model <MODEL>        OpenAI model ex(gpt-4o, gpt-4-turbo, gpt-3.5-turbo-1106) [default: gpt-4o]
+  -m, --model <MODEL>        OpenAI model ex(gpt-4o-mini, gpt-4o, gpt-4-turbo, gpt-3.5-turbo-1106) [default: gpt-4o-mini]
   -a, --api-key <API_KEY>    OpenAI API Key [env: API_KEY]
       --lines <LINES>        Number of lines of translation [default: 20]
       --requests <REQUESTS>  Number of concurrent requests [default: 5]

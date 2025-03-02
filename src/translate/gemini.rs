@@ -1,6 +1,6 @@
-use crate::client::gemini::{request, Stats};
+use crate::client::gemini::{Stats, request};
 use crate::translate::translator::Context;
-use futures::{stream, StreamExt};
+use futures::{StreamExt, stream};
 use log::{debug, error, trace};
 use serde::Deserialize;
 
@@ -112,7 +112,8 @@ async fn translate_bulk(
         user_contents.push(format!("<paragraph>{}</paragraph>", line));
     }
 
-    let prompt = format!("You are an excellent translator.\
+    let prompt = format!(
+        "You are an excellent translator.\
         Translate it into {}. Please output the following JSON.\
         A string in `<paragraph>` tag to `</paragraph>` tag is one paragraph.\
         If a paragraph of input is translated and a paragraph consists of multiple sentences, output an array consisting of multiple String.\
@@ -120,7 +121,11 @@ async fn translate_bulk(
         Using this JSON schema:\
         Paragraph = {{\"line\": number, \"text\": list[string]}}\
         Return a `list[Paragraph]`\
-        Please remove `<paragraph>` and `</paragraph>` tags from the translation result.", language, &original_lines.len(), &original_lines.len());
+        Please remove `<paragraph>` and `</paragraph>` tags from the translation result.",
+        language,
+        &original_lines.len(),
+        &original_lines.len()
+    );
 
     let response = request(model, api_key, &prompt, &user_contents)
         .await
