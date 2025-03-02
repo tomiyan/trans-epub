@@ -1,7 +1,7 @@
 [package]
 name = "trans-epub"
 version = "0.0.13"
-edition = "2021"
+edition = "2024"
 description = "Translate EPUB with CLI"
 repository = "https://github.com/tomiyan/trans-epub"
 homepage = "https://github.com/tomiyan/trans-epub"
