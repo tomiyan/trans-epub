@@ -1,6 +1,6 @@
-use crate::client::open_ai::{request, Ratelimit, Stats};
+use crate::client::open_ai::{Ratelimit, Stats, request};
 use crate::translate::translator::Context;
-use futures::{stream, StreamExt};
+use futures::{StreamExt, stream};
 use log::{debug, error, trace};
 use serde::Deserialize;
 
@@ -119,7 +119,8 @@ async fn translate_bulk(
         user_contents.push(format!("<paragraph>{}</paragraph>", line));
     }
 
-    let prompt = format!("You are an excellent translator.\
+    let prompt = format!(
+        "You are an excellent translator.\
         Translate it into {}. Please output the following JSON.\
         A string in `<paragraph>` tag to `</paragraph>` tag is one paragraph.\
         The value of the `results` Key is an array type.\
@@ -129,7 +130,11 @@ async fn translate_bulk(
         Please output the number of the input paragraph.\
         The value of `translated` Key is an array of String type.\
         If a paragraph of input is translated and a paragraph consists of multiple sentences, output an array consisting of multiple String.\
-        Please remove `<paragraph>` and `</paragraph>` tags from the translation result.", language, &original_lines.len(), &original_lines.len());
+        Please remove `<paragraph>` and `</paragraph>` tags from the translation result.",
+        language,
+        &original_lines.len(),
+        &original_lines.len()
+    );
 
     let response = request(model, api_key, &prompt, &user_contents)
         .await
