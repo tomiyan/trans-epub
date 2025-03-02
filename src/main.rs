@@ -32,8 +32,8 @@ enum SubCommands {
         #[arg(short, long)]
         language: String,
 
-        /// OpenAI model ex(gpt-4o, gpt-4-turbo, gpt-3.5-turbo-1106)
-        #[arg(short, long, default_value_t = String::from("gpt-4o"))]
+        /// OpenAI model ex(gpt-4o-mini, gpt-4o, gpt-4-turbo, gpt-3.5-turbo-1106)
+        #[arg(short, long, default_value_t = String::from("gpt-4o-mini"))]
         model: String,
 
         /// OpenAI API Key
@@ -62,8 +62,8 @@ enum SubCommands {
         #[arg(short, long)]
         language: String,
 
-        /// Gemini model ex(gemini-1.5-flash)
-        #[arg(short, long, default_value_t = String::from("gemini-1.5-flash"))]
+        /// Gemini model ex(gemini-2.0-flash-lite, gemini-1.5-flash)
+        #[arg(short, long, default_value_t = String::from("gemini-2.0-flash-lite"))]
         model: String,
 
         /// Gemini API Key
