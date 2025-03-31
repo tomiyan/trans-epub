@@ -15,7 +15,7 @@ license = "MIT OR Apache-2.0"
 clap = { version = "4.5.31", features = ["derive", "env"]}
 zip = "2.2.3"
 reqwest = { version = "0.12.12", default-features = false, features = ["json", "rustls-tls"] }
-quick-xml = "0.37.2"
+quick-xml = "0.37.3"
 tokio = { version = "1", features = ["full"]}
 serde = { version = "1.0.218", features = ["derive"] }
 serde_json = "1.0.140"
