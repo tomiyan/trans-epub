@@ -74,7 +74,7 @@ Options:
   -i, --input <INPUT>        input file path
   -o, --output <OUTPUT>      output file path
   -l, --language <LANGUAGE>  translate language
-  -m, --model <MODEL>        Gemini model ex(gemini-1.5-flash) [default: gemini-1.5-flash]
+  -m, --model <MODEL>        Gemini model ex(gemini-1.5-flash) [default: "gemini-2.0-flash-lite]
   -a, --api-key <API_KEY>    Gemini API Key [env: API_KEY]
       --lines <LINES>        Number of lines of translation [default: 100]
       --requests <REQUESTS>  Number of concurrent requests [default: 1]

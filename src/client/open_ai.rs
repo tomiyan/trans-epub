@@ -173,7 +173,7 @@ pub async fn request(
         serde_json::from_str(&response_text).expect("API Response to JSON error");
 
     if response_body.choices.is_empty() {
-        info!("response status: {}", status.to_string());
+        info!("response status: {}", status);
         trace!("response error: {}", response_text);
     }
 
