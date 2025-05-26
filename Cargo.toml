@@ -13,7 +13,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 clap = { version = "4.5.33", features = ["derive", "env"]}
-zip = "2.2.3"
+zip = "4.0.0"
 reqwest = { version = "0.12.2", default-features = false, features = ["json", "rustls-tls"] }
 quick-xml = "0.37.5"
 tokio = { version = "1.36.0", features = ["full"]}
