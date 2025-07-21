@@ -80,8 +80,7 @@ pub async fn request(
     let client = Client::new();
     let request_body = to_request_body(prompt, user_contents);
     let url = format!(
-        "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}",
-        model, api_key
+        "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     );
     let response = client.post(url).json(&request_body).send().await;
 
@@ -96,8 +95,8 @@ pub async fn request(
         serde_json::from_str(&response_text).expect("API Response to JSON error");
 
     if response_body.candidates.is_empty() {
-        info!("response status: {}", status);
-        trace!("response error: {}", response_text);
+        info!("response status: {status}");
+        trace!("response error: {response_text}");
     }
 
     let text = response_body
