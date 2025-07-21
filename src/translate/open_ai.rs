@@ -80,12 +80,12 @@ async fn translate_parallel(
                 panic!("retry max error");
             }
             for l in &original_lines {
-                trace!("{}", l);
+                trace!("{l}");
             }
             for l in &translated_lines {
-                trace!("{}", l);
+                trace!("{l}");
             }
-            error!("retry count: {}", retry_count);
+            error!("retry count: {retry_count}");
             error!(
                 "translated line length error {}/{}",
                 translated_lines.len(),
@@ -116,7 +116,7 @@ async fn translate_bulk(
 ) -> BulkTranslated {
     let mut user_contents: Vec<String> = vec![];
     for line in &original_lines {
-        user_contents.push(format!("<paragraph>{}</paragraph>", line));
+        user_contents.push(format!("<paragraph>{line}</paragraph>"));
     }
 
     let prompt = format!(

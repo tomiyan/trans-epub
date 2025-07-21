@@ -39,7 +39,7 @@ impl Epub {
         let mut count = 1;
         let size = file_contents.len();
         for (name, content) in file_contents {
-            info!("{}/{} {}", count, size, name);
+            info!("{count}/{size} {name}");
             count += 1;
             if name.ends_with(".xhtml")
                 || name.ends_with(".xml")

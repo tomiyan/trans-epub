@@ -118,7 +118,7 @@ pub async fn request(
     let request_body = to_request_body(model, prompt, user_contents);
     let response = client
         .post("https://api.openai.com/v1/chat/completions")
-        .header("Authorization", format!("Bearer {}", api_key))
+        .header("Authorization", format!("Bearer {api_key}"))
         .json(&request_body)
         .send()
         .await;
@@ -173,8 +173,8 @@ pub async fn request(
         serde_json::from_str(&response_text).expect("API Response to JSON error");
 
     if response_body.choices.is_empty() {
-        info!("response status: {}", status);
-        trace!("response error: {}", response_text);
+        info!("response status: {status}");
+        trace!("response error: {response_text}");
     }
 
     debug!(
