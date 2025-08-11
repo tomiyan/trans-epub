@@ -1,7 +1,7 @@
 use crate::translate::translator::Translator;
 use log::{debug, info};
 use quick_xml::events::{BytesText, Event};
-use quick_xml::{Reader, Writer};
+use quick_xml::{escape::unescape, Reader, Writer};
 use regex::Regex;
 use std::fs::File;
 use std::io::{Cursor, Read, Write};
@@ -147,7 +147,7 @@ async fn translate_lines(content: &[u8]) -> Vec<String> {
                 }
             }
             Ok(Event::Text(e)) => {
-                let original_text = e.unescape().unwrap().into_owned();
+                let original_text = unescape(str::from_utf8(e.as_ref()).unwrap()).unwrap().into_owned();
                 if is_translate {
                     translate.push_str(&original_text);
                 }
@@ -220,7 +220,7 @@ async fn translate_xml_content(lines: Vec<String>, content: &[u8]) -> Vec<u8> {
                 }
             }
             Ok(Event::Text(e)) => {
-                let original_text = e.unescape().unwrap().into_owned();
+                let original_text = unescape(str::from_utf8(e.as_ref()).unwrap()).unwrap().into_owned();
                 if is_translate {
                     translate.push_str(&original_text);
                 }
