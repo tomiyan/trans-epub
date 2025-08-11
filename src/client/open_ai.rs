@@ -93,10 +93,10 @@ impl Ratelimit {
             if let Ok(milliseconds) = milliseconds_str.parse::<u64>() {
                 return Duration::from_millis(milliseconds);
             }
-        } else if let Some(seconds_str) = self.reset_tokens.strip_suffix('s') {
-            if let Ok(seconds) = seconds_str.parse::<f64>() {
-                return Duration::from_secs_f64(seconds);
-            }
+        } else if let Some(seconds_str) = self.reset_tokens.strip_suffix('s')
+            && let Ok(seconds) = seconds_str.parse::<f64>()
+        {
+            return Duration::from_secs_f64(seconds);
         }
         Duration::from_secs(1)
     }
