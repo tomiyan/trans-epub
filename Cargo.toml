@@ -1,6 +1,6 @@
 [package]
 name = "trans-epub"
-version = "0.0.20"
+version = "0.0.21"
 edition = "2024"
 description = "Translate EPUB with CLI"
 repository = "https://github.com/tomiyan/trans-epub"
@@ -13,7 +13,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 clap = { version = "4.5.43", features = ["derive", "env"]}
-zip = "5.1.1"
+zip = "6.0.0"
 reqwest = { version = "0.12.2", default-features = false, features = ["json", "rustls-tls"] }
 quick-xml = "0.38.3"
 tokio = { version = "1.47.1", features = ["full"]}
